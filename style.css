@@ -428,7 +428,8 @@ textarea {
     float: left;
     display: inline-block; }
   #roster .controls .sort {
-    padding: 2.15em 2em; }
+    padding: 2.15em 2em;
+    overflow: hidden; }
     #roster .controls .sort .label {
       padding-top: .3em;
       margin-right: 1em;
