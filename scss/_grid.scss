@@ -1,0 +1,89 @@
+@import 'variables';
+
+.grid-container, .container {
+	
+}
+
+.grid-container {
+	position: relative;
+	float: left;
+	width: 100%;
+	@include clearfix;
+}
+
+.container {
+	width: 100%;
+	max-width: $max-width;
+	position: relative;
+	margin: 0 auto;
+	@include clearfix;
+}
+
+.grid-1, .grid-2, .grid-3, .grid-4, .grid-5, .grid-6, .grid-7, .grid-8, .grid-9, .grid-10, .grid-11, .grid-12 {
+	padding: 0 10px;
+	width: 100%;
+	float: left;
+}
+
+.prefix-1 {
+	margin-left: 8.333%;
+}
+
+@include respond-to(600px) {
+	.grid-1 {
+		width: 8.333%;
+	}
+
+	.grid-2 {
+		width: 16.667%;
+	}
+
+	.grid-3 {
+		width: 25%;
+	}
+	
+	.grid-4 {
+		width: 33.333%;
+	}
+	
+	.grid-5 {
+		width: 41.667%;
+	}
+	
+	.grid-6 {
+		width: 50%;
+	}
+	
+	.grid-7 {
+		width: 58.333%
+	}
+	
+	.grid-8 {
+		width: 66.666%;
+	}
+	
+	.grid-9 {
+		width: 75%;
+	}
+	
+	.grid-10 {
+		width: 83.333%;
+	}
+	
+	.grid-11 {
+		width: 91.667%;
+	}
+	
+	.grid-12 {
+		width: 100%;
+	}
+	
+}
+	
+.col-1 {
+	float: left;
+	width: 200px;
+	display: block;
+	max-width: 300px;
+	padding-top: .4em;
+}

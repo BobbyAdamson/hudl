@@ -1,0 +1,522 @@
+<html>
+  <head>
+    <title>Hudl Roster Management screen</title>
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<script src="js/jquery.min.js"></script>
+	<script src="js/angular.min.js"></script>
+	<script src="js/ng-flow.js"></script>
+	<script type="text/javascript" src="js/app.js"></script>
+  </head>
+  <body ng-app="rosterApp" ng-controller="RosterCtrl">
+    <header id="hudl-header">
+    	<a href="#" id="hudl-logo">
+    		<div>Hudl</div></a>
+    	<ul>
+    		<li><a href="#">Home</a></li>
+    		<li><a href="#">Video</a></li>
+    		<li><a href="#">Highlights</a></li>
+    		<li><a href="#">Team</a></li>
+    		<li><a href="#">Coaching Tools</a></li>
+    	</ul>
+    	
+    	<ul class="pull-right user">
+    		<li><a href="#">Coach Adamson</a></li>
+    		<li><a href="#" class="orange msg">Msg</a></li>
+    		<li><a href="#" class="orange">?</a></li>
+    	</ul>
+    </header>
+    
+    <div id="roster-management" class="grid-container">
+    	<div class="grid-12" id="header">
+    		<h1>Manage Roster <br /><span>Hudl - JV Football</span></h1>
+    
+			<div class="pull-right roster-buttons">
+				<a href="#" class="btn blue add" id="add-player-button">Add Player</a>
+				<a href="#" class="btn orange message">Message</a>
+				<a href="#" class="btn import hide-mobile">Import Roster</a>
+				<a href="#" class="btn export hide-mobile">Export Roster</a>
+			</div>
+    	</div>
+    
+		<div id="add-player-container" class="grid-container" style="">
+			<div class="add-header grid-container">
+				<h2>Add player</h2>
+			</div>
+			<form ng-submit="addPost($scope)" name="newPlayerForm" class="player grid-container">
+					<header class="grid-container">
+						<div class="fields grid-container">
+							<div class="image-upload hide-mobile" flow-init flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]" flow-files-submitted="$flow.upload()">
+								<img ng-show="$flow.files.length" ng-src='{{ player.photo }}' flow-img="$flow.files[0]" alt="{{ player.fname }} {{ player.lname }}" />
+								<a href="#" class="btn add-photo icon" ng-hide="$flow.files.length" flow-btn flow-drop flow-attrs="{accept:'image/*'}"><span>Select image</span><img src="images/icons/icon-image-up.svg" /></a>
+      <a href="#" class="change icon" ng-show="$flow.files.length" flow-btn flow-attrs="{accept:'image/*'}"><img src="images/icons/icon-image-up-green.svg" /></a>
+      <a href="#" class="remove icon" ng-show="$flow.files.length"
+ ng-click="$flow.cancel()">
+        Remove
+      </a>
+							</div>
+							<div class="col-1">
+								<div class="grid-container">
+									<label class="grid-6"><span>First Name</span><input name="fname" required ng-model="fname" required placeholder="First Name" /></label>
+									<label class="grid-6"><span>Last Name</span><input name="lname" required ng-model="lname" required placeholder="Last Name" /></label>
+									<label class="grid-3"><span>Jersey Number</span><input name="number" ng-model="number" placeholder="Jersey #" /></label>
+									<label class="grid-3"><span>Graduating year</span>
+										<select name="gradyear" ng-model="gradyear" class="custom-select" placeholder="Grad year">
+											<option value="2015">2015 - Senior</option>
+											<option value="2016">2016 - Junior</option>
+										</select></label>
+									<label class="grid-2"><span>Feet</span><input name="feet" ng-model="feet" placeholder="FT" /></label>
+									<label class="grid-2"><span>Inches</span><input name="inches" ng-model="inches" placeholder="IN" /></label>
+									<label class="grid-2"><span>Weight</span><input name="weight" ng-model="weight" placeholder="Weight" /></label>
+								</div>
+							</div>
+						</div>
+						
+						<div class="preview">
+							<img ng-src='{{ player.photo }}' alt="{{ player.fname }} {{ player.lname }}" />
+							<div class="col-1">
+								<h3 class="player-name">
+									<span class="last-name" ng-show="lname.length">{{ lname }}</span><span class="placeholder" ng-show="!lname.length">Last name</span>,
+									<span class="first-name" ng-show="fname.length">{{ fname }}</span><span class="placeholder" ng-show="!fname.length">First name</span></h3>
+								<p class="player-num"><span ng-show="number.length"># {{number}}</span><span class="placeholder" ng-show="!number.length">Jersey #</span> | <span ng-show="gradyear.length">{{gradyear}}</span><span ng-show="!gradyear.length" class="placeholder">Grad year</span></p>
+							</div>
+							<p class="player-position"><span ng-repeat="position in player.position">{{ position.position }} <span ng-show="player.position.length > 2">, </span></span></p>
+							<p class="player-height"><span ng-show="feet.length">{{feet}}'</span><span class="placeholder" ng-show="!feet.length">FT</span> <span ng-show="inches">{{inches}}'</span><span class="placeholder" ng-show="!inches.length">IN</span></p>
+							<p class="player-weight"><span ng-show="weight.length">{{weight}}lbs</span><span ng-show="!weight.length" class="placeholder">Weight</span></p>
+						</div>
+						
+						<div class="buttons">
+							<input type="submit" href="#" class="btn add" value="Add Player" />
+							<a href="#" class="btn less" style="display: none;">Less Details</a>
+							<a href="#" class="btn show-details">More Details</a>
+							<a href="#" class="btn cancel close-add">Cancel</a>
+						</div>
+					</header>
+					
+					<div class="grid-container details">
+						
+						<div class="team-info top-padding">
+							
+							<div class="position-container">
+								<h4>Position</h4>
+									<ul class="position grid-container">
+										<li ng-repeat="position in player.position" class="grid-container">
+											<span class="position grid-6"><a href="" ng-click="removepos($index, player)" class="remove">Remove</a>{{position.position}}</span> <span class="depth grid-6"><input ng-model="position.depth" name="depth" /></span></li>
+									</ul>
+								
+								
+								<form ng-submit="" class="addpos">
+									<label class="add-player-add-pos"><h4 class="add">Add Position</h4>
+										<select ng-model="player.newposition" class="custom-select">
+											<option value="">POS</option>
+											<option value="QB">FA</option>
+											<option value="RB">RB</option>
+											<option value="WR">WR</option>
+											<option value="TE">TE</option>
+											<option value="S">S</option>
+											<option value="CB">CB</option>
+											<option value="RG">RG</option>
+											<option value="LG">LG</option>
+											<option value="RT">RT</option>
+										</select>
+										<input type="text" ng-model="player.newdepth" placeholder="DEPTH" class="depth" />
+									</label>
+									<input type="submit" value="Add" class="btn" />
+								</form>
+							</div>
+							
+							<label class="captain"><h4>Captain</h4> <input type="checkbox" name="captain" ng-model="player.captain" /></label>
+							
+							<label class="captain"><h4>Active</h4> <input type="checkbox" name="active" ng-model="player.active" /></label>
+							
+						</div>
+						
+						<div class="inner">
+							<div class="grid-container top-padding player-info">
+								<div class="grid-6 grid-container">
+									<h4 class="grid-12">Athlete Info</h4>
+									<label class="grid-6"><span>First Name</span><input name="fname" required ng-model="fname" placeholder="First Name" /></label>
+									<label class="grid-6"><span>Last Name</span><input name="lname" required ng-model="lname" placeholder="Last Name" /></label>
+									<label class="grid-2"><span>Jersey Number</span><input name="number" ng-model="number" placeholder="Jersey #" /></label>
+									<label class="grid-3"><span>Graduating year</span>
+										<select name="gradyear" ng-model="gradyear" class="custom-select" placeholder="Grad year">
+											<option value="2015">2015 - Senior</option>
+											<option value="2016">2016 - Junior</option>
+										</select></label>
+									<label class="grid-1 prefix-1"><span>Feet</span><input name="feet" ng-model="feet" placeholder="FT" /></label>
+									<label class="grid-1"><span>Inches</span><input name="inches" ng-model="inches" placeholder="IN" /></label>
+									<label class="grid-3"><span>Weight</span><input name="weight" ng-model="weight" placeholder="Weight" /></label>
+								</div>
+								
+								<div class="grid-6 grid-container">
+									<h4 class="grid-12">Athlete Contact</h4>
+									<label class="grid-6"><span>Cell</span><input name="athleteCell" ng-model="athleteCell" placeholder="Cell #" /></label>
+									<label class="grid-6"><span>Carrier</span>
+										<select name="athleteCarrier" ng-model="athleteCarrier" class="custom-select">
+											<option value="AT&T">AT&T</option>
+											<option value="Verizon">Verizon</option>
+										</select></label>
+									<label class="grid-6"><span>Home</span><input name="athleteHome" ng-model="athleteHome" placeholder="Home #" /></label>
+									<label class="grid-6"><span>Email</span><input name="athleteEmail" ng-model="athleteEmail" placeholder="Email" /></label>
+								</div>
+								
+								<div class="grid-6 grid-container">
+									<h4 class="grid-12">Address</h4>
+									<label class="grid-12"><span>Street</span><input name="athleteStreet" ng-model="athleteStreet" placeholder="Street address" /></label>
+									<label class="grid-6"><span>City</span><input name="athleteCity" ng-model="athleteCity" placeholder="City" /></label>
+									<label class="grid-3"><span>State</span><input name="athleteState" ng-model="athleteState" placeholder="State" /></label>
+									<label class="grid-3"><span>Zip</span><input name="athleteZip" ng-model="athleteZip" placeholder="Zip" /></label>
+								</div>
+								
+								<div class="grid-6 grid-container">
+									<h4 class="grid-12">Guardian Contact</h4>
+									<label class="grid-6"><span>Name</span><input name="guardianName" ng-model="guardianName" placeholder="Name" /></label>
+									<label class="grid-6"><span>Cell</span><input name="guardianCell" ng-model="guardianCell" placeholder="Phone #" /></label>
+									<label class="grid-6"><span>Email</span><input name="guardianEmail" ng-model="guardianEmail" placeholder="Email" /></label>
+								</div>
+								
+								<div class="grid-6 grid-container">
+									<h4 class="grid-12">Additional Notes</h4>
+									<label class="grid-12">
+										<span>notes</span>
+										<textarea ng-model="notes" name="notes" rows="6"></textarea>
+									</label>
+								</div>
+								
+								<div class="grid-6 grid-container">
+									<h4 class="grid-12">Seasons</h4>
+									<ul class="seasons grid-container">
+										<li ng-repeat="season in seasons" class="grid-container grid-2">
+											<span class="position">{{ season }}</span>
+											<a href="" ng-click="removeseason($index, player)" class="remove">Remove</a></li>
+									</ul>
+									<form ng-submit="addseason(player)" class="addseason grid-container">
+										<h4 class="grid-12">Add to Season</h4>
+											<label class="grid-6 season-selector grid-container">
+												<select ng-model="newseason" class="custom-select grid-12">
+												<option value="2011">2011</option>
+												<option value="2012">2012</option>
+												<option value="2013">2013</option>
+											</select>
+										</label>
+										<input type="submit" value="Add" class="btn" />
+									</form>
+								</div>
+							</div>
+						</div><!-- player info -->
+
+					</div>
+			</form>
+		</div>
+		
+		<section class="grid-container" id="roster">
+			<header class="clearfix grid-12 controls">
+				<h2>Roster</h2>
+				<div class="grid-container">
+					<div class="sort grid-6 grid-container">
+						<label for="orderProp" class="grid-6">
+							<span class="label">Sort: </span>
+						<select ng-model="orderProp" name="orderProp" class="custom-select">
+							<option value="lname">Last name</option>
+							<option value="fname">First name</option>
+							<option value="gradyear">Graduating Year</option>
+							<option value="weight">Player height</option>
+						</select></label>
+						<label for="filterProp" class="hide-mobile grid-6">
+							<span class="label">Filter: </span>
+						<select name="filterProp" class="custom-select">
+							<option value="">2014-2015</option>
+							<option value="">2015-2016</option>
+							<option value="">2016-2017</option>
+							<option value="">2017-2018</option>
+						</select></label>
+					</div>
+					<input ng-model="searchText" id="search" type="text" placeholder="Search" class="search pull-right" />
+				</div>
+			</header>
+			
+			<ul class="player-list grid-container">
+				<li ng-repeat="player in players | filter:searchText | orderBy:orderProp" class="player">
+					<header class="grid-container">
+						<img ng-src='{{ player.photo }}' alt="{{ player.fname }} {{ player.lname }}" />
+						<div class="col-1">
+							<h3 class="player-name">
+								<span class="last-name">{{ player.lname }}</span>,
+								<span class="first-name">{{ player.fname }}</span></h3>
+							<p class="player-num"># {{player.number}} | {{player.gradyear}} <span class="show-mobile" ng-repeat="position in player.position">| {{ position.position }} </span></p>
+						</div>
+						<p class="player-position hide-mobile"><span ng-repeat="position in player.position">{{ position.position }} </span></p>
+						<p class="player-height hide-mobile">{{player.feet}} {{player.inches}}&#34;</p>
+						<p class="player-weight hide-mobile">{{player.weight}}lbs</p>
+						<div class="buttons">
+							<a href="#" class="btn edit hide-mobile">Details</a>
+							<a href="#" class="btn message show-mobile">Message</a>
+						</div>
+						<div class="edit-options" style="display:none;">
+							<a href="#" class="btn message">Message</a>
+							<a href="#" class="btn save">Save</a>
+							<a href="#" class="btn cancel">Cancel</a>
+							<a href="#" class="btn delete" ng-click="deletePlayer()">Delete</a>
+						</div>
+					</header>
+					
+					<div class="grid-container details">
+						<div class="team-info top-padding">
+							
+							<div class="position-container">
+								<h4>Position</h4>
+									<ul class="position grid-container">
+										<li ng-repeat="position in player.position" class="grid-container">
+											<span class="position grid-6"><a href="" ng-click="removepos($index, player)" class="remove">Remove</a>{{position.position}}</span> <span class="depth grid-6"><input ng-model="position.depth" name="depth" /></span></li>
+									</ul>
+								
+								
+								<form ng-submit="addPosition(player)" class="addpos">
+									<label><h4 class="add">Add Position</h4>
+										<select ng-model="player.newposition" class="custom-select">
+											<option value="">POS</option>
+											<option value="QB">FA</option>
+											<option value="RB">RB</option>
+											<option value="WR">WR</option>
+											<option value="TE">TE</option>
+											<option value="S">S</option>
+											<option value="CB">CB</option>
+											<option value="RG">RG</option>
+											<option value="LG">LG</option>
+											<option value="RT">RT</option>
+										</select>
+										<input type="text" ng-model="player.newdepth" placeholder="DEPTH" class="depth" />
+									</label>
+									<input type="submit" value="Add" class="btn" />
+								</form>
+							</div>
+							
+							<label class="captain"><h4>Captain</h4> <input type="checkbox" name="captain" ng-model="player.captain" /></label>
+							
+							<label class="captain"><h4>Active</h4> <input type="checkbox" name="active" ng-model="player.active" /></label>
+							
+						</div>
+						
+						<div class="inner">
+							<div class="grid-container top-padding player-info">
+								<div class="grid-6 grid-container">
+									<h4 class="grid-12">Athlete Info</h4>
+									<label class="grid-6"><span>First Name</span><input name="fname" required ng-model="player.fname" placeholder="First Name" /></label>
+									<label class="grid-6"><span>Last Name</span><input name="lname" required ng-model="player.lname" placeholder="Last Name" /></label>
+									<label class="grid-3"><span>Jersey Number</span><input name="number" ng-model="player.number" placeholder="Jersey #" /></label>
+									<label class="grid-3"><span>Graduating year</span>
+										<select name="gradyear" ng-model="player.gradyear" class="custom-select" placeholder="Grad year">
+											<option value="2015">2015 - Senior</option>
+											<option value="2016">2016 - Junior</option>
+										</select></label>
+									<label class="grid-2"><span>Feet</span><input name="feet" ng-model="player.feet" placeholder="FT" /></label>
+									<label class="grid-2"><span>Inches</span><input name="inches" ng-model="player.inches" placeholder="IN" /></label>
+									<label class="grid-2"><span>Weight</span><input name="weight" ng-model="player.weight" placeholder="Weight" /></label>
+								</div>
+								
+								<div class="grid-6 grid-container">
+									<h4 class="grid-12">Athlete Contact</h4>
+									<label class="grid-6"><span>Cell</span><input name="athleteCell" ng-model="player.athleteCell" placeholder="Cell #" /></label>
+									<label class="grid-6"><span>Carrier</span>
+										<select name="athleteCarrier" ng-model="player.athleteCarrier" class="custom-select">
+											<option value="AT&T">AT&T</option>
+											<option value="Verizon">Verizon</option>
+										</select></label>
+									<label class="grid-6"><span>Home</span><input name="athleteHome" ng-model="player.athleteHome" placeholder="Home #" /></label>
+									<label class="grid-6"><span>Email</span><input name="athleteEmail" ng-model="player.athleteEmail" placeholder="Email" /></label>
+								</div>
+								
+								<div class="grid-6 grid-container">
+									<h4 class="grid-12">Address</h4>
+									<label class="grid-12"><span>Street</span><input name="athleteStreet" ng-model="player.athleteStreet" placeholder="Street address" /></label>
+									<label class="grid-6"><span>City</span><input name="athleteCity" ng-model="player.athleteCity" placeholder="City" /></label>
+									<label class="grid-3"><span>State</span><input name="athleteState" ng-model="player.athleteState" placeholder="State" /></label>
+									<label class="grid-3"><span>Zip</span><input name="athleteZip" ng-model="player.athleteZip" placeholder="Zip" /></label>
+								</div>
+								
+								<div class="grid-6 grid-container">
+									<h4 class="grid-12">Guardian Contact</h4>
+									<label class="grid-6"><span>Name</span><input name="guardianName" ng-model="player.guardianName" placeholder="Name" /></label>
+									<label class="grid-6"><span>Cell</span><input name="guardianCell" ng-model="player.guardianCell" placeholder="Phone #" /></label>
+									<label class="grid-6"><span>Email</span><input name="guardianEmail" ng-model="player.guardianEmail" placeholder="Email" /></label>
+								</div>
+								
+								<div class="grid-6 grid-container">
+									<h4 class="grid-12">Additional Notes</h4>
+									<label class="grid-12">
+										<span>notes</span>
+										<textarea ng-model="notes" name="notes" rows="6"></textarea>
+									</label>
+								</div>
+								
+								<div class="grid-6 seasons grid-container">
+									<h4 class="grid-12">Seasons</h4>
+									<ul class="seasons grid-container">
+										<li ng-repeat="season in player.seasons" class="grid-container grid-2">
+											<span class="position">{{ season }}</span>
+											<a href="" ng-click="removeseason($index, player)" class="remove">Remove</a></li>
+									</ul>
+									<form ng-submit="addseason(player)" class="addseason grid-container">
+										<h4 class="grid-12">Add to Season</h4>
+											<label class="grid-4 grid-container">
+												<select ng-model="player.newseason" class="custom-select grid-12">
+												<option value="2011">2011</option>
+												<option value="2012">2012</option>
+												<option value="2013">2013</option>
+											</select>
+										</label>
+										<input type="submit" value="Add" class="btn" />
+									</form>
+								</div>
+								
+							</div>
+						</div><!-- player info -->
+
+					</div>
+				</li>
+			</ul>
+		</section>
+    </div><!-- #roster-management -->
+    
+    <div class="overlay"></div>
+    <div class="message-modal">
+    	<div class="header">
+    		<h2>Message</h2>
+    	</div>
+    </div>
+    
+    <div class="confirmation success">
+    	<img src="images/icons/icon-success.svg" />
+    	<p class="primary">Player added successfully</p>
+    </div>
+    
+    <div class="confirmation warning">
+    	<img src="images/icons/icon-warning.svg" />
+    	<p class="primary">Are you sure you want to delete this player?<br ?>This is a permanent action</p>
+    	<div class="confirm-buttons">
+    		<a href="#" class="btn confirm-delete" ng-click="confirmDelete()">Yes, delete</a>
+    		<a href="#" class="btn cancel-delete">Do not delete</a>
+    	</div>
+    </div>
+    
+    <div class="confirmation modal-confirm-delete">
+    	<img src="images/icons/icon-delete.svg" />
+    	<p class="primary">Player deleted successfully</p>
+    </div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+	
+		$('.edit').on('click', function(){
+			var player = $(this).closest('.player');
+			player.siblings().removeClass('opened');
+			$(this).fadeOut(200);
+			player.addClass('opened');
+			player.find('.edit-options').delay(200).fadeIn(200);
+			player.siblings().find('.details').slideUp();
+			player.siblings().find('.edit-options').fadeOut();
+			player.siblings().find('.edit').fadeIn();
+
+			player.find('.details').slideDown();
+			return false;
+		});
+		
+		function closedetails(){
+			var player = $(this).closest('.player');
+			player.removeClass('opened');
+			player.find('.edit-options').fadeOut(200);
+			player.find('.edit').delay(200).fadeIn();
+			
+			player.find('.details').slideUp();
+			return false;
+		};
+		
+		$('.cancel').on('click', closedetails);
+		$('.save').on('click', closedetails);
+		
+		$('.close-add').on('click', function(){
+			$('#add-player-container').slideUp();
+			$('#add-player-button').fadeIn(200);
+			$(this).siblings('.less').fadeOut(200);
+			$(this).siblings('.show-details').delay(200).fadeIn(200);
+			var player = $(this).closest('.player');
+			player.find('.preview').fadeOut(200);
+			player.find('.fields').delay(200).fadeIn(200);
+			player.find('.details').slideUp();
+			return false;
+		});
+		
+		$('.show-details').on('click', function(){
+			$(this).fadeOut(200);
+			var player = $(this).closest('.player');
+			player.find('.fields').fadeOut(200);
+			player.find('.preview').delay(200).fadeIn(200);
+			player.find('.details').slideDown();
+			player.find('.less').delay(200).fadeIn(200);
+			return false;
+		});
+		
+		$('.less').on('click', function(){
+			$(this).fadeOut(200);
+			var player = $(this).closest('.player');
+			player.find('.preview').fadeOut(200);
+			player.find('.fields').delay(200).fadeIn(200);
+			player.find('.details').slideUp();
+			player.find('.show-details').delay(200).fadeIn(200);
+			return false;
+		});
+		
+		$('#add-player-button').on('click', function(){
+			$(this).fadeOut(200);
+			$('#add-player-container').slideDown();
+			return false;
+		});
+		
+		function showModal(){
+			$('.overlay').fadeIn(200);
+			$('.message-modal').fadeIn(200);
+			return false;
+		}
+		
+		$('.message').on('click', showModal);
+		
+		function hideModal(){
+			$('.overlay').fadeOut(200);
+			$('.message-modal').fadeOut(200);
+			$('.confirmation').fadeOut(200);
+			return false;
+		};
+		
+		$('.overlay').on('click', hideModal);
+		
+		$('.cancel-delete').on('click', function(){
+			$('.overlay').fadeOut(200);
+			$('.warning').fadeOut(200);
+		});
+		
+		$(document).keyup(function(e) {
+
+		  if (e.keyCode == 27) { 
+			  if($("#search").is(":focus")){
+			  		console.log('test');
+					$('#search').removeAttr('value');
+			  }
+		  } 
+		});
+		
+	});
+	
+	$(".custom-select").each(function(){
+        $(this).wrap( "<span class='select-wrapper'></span>" );
+        $(this).after("<span class='holder' ng-model='player.gradyear'></span>");
+        });
+    $(".custom-select").change(function(){
+        var selectedOption = $(this).find(":selected").text();
+        $(this).next(".holder").text(selectedOption);
+    }).trigger('change');
+</script>
+
+  </body>
+</html>

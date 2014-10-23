@@ -1,0 +1,26 @@
+@import 'variables';
+
+.btn {
+	padding: 1.0em;
+	border-radius: 2px;
+	background: #38434f;
+	color: #fff;
+	text-decoration: none;
+	font-size: 1.4em;
+	display: block;
+	float: left;
+	+.btn {
+		margin-left: 1em;
+	}
+	&.message {
+		background: $orange;
+	}
+	&.add {
+		background: $blue;
+		border: none;
+		cursor: pointer;
+	}
+	&.save {
+		background: $green;
+	}
+}

@@ -1,0 +1,43 @@
+$max-width: 800px;
+
+$blue: #54A4FF;
+$dk-blue: #232a31;
+$med-blue: #38434f;
+$orange: #FA7600;
+$grey: #f2f2f2;
+$med-grey: #a1a1a1;
+$super-lt-grey: #fcfcfc;
+$lt-grey: #f8f8f8;
+$dk-grey: #dadada;
+$super-dk-grey: #3f3f3f;
+$red: #D0021B;
+$yellow: #F5F423;
+$dk-black: #181d22;
+$green: #76cb76;
+
+$body-font: 'PT Sans';
+$body-font-color: $med-blue;
+$header-font: 'PT Sans';
+$header-font-color: $med-blue;
+
+$base-size: 10px;
+$font-size: 1.4em;
+
+$h1-size: 3.6em;
+$h2-size: 2.6em;
+$h3-size: 2em;
+$h4-size: 1.6em;
+
+@mixin clearfix {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+@mixin respond-to($size) {
+	@media screen and (min-width: $size) {
+		@content;
+	}
+}
