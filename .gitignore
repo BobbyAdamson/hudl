@@ -1,0 +1,5 @@
+# Ignore the cache and ignore compiled files.
+/.sass-cache/
+/style.css
+
+/node_modules/
